@@ -45,9 +45,11 @@
             }
         ?>
         <form action="" method="post">
-            <input type="text" name="name" placeholder="Enter name" value="<?php echo $row->name; ?>"><br>
-            <textarea name="description" value="<?php echo $row->description; ?>"><br>
-            <input type="number" name="quantity" placeholder="Enter email" value="<?php echo $row->email; ?>" ><br>
+            <input type="text" name="name" placeholder="Enter name" value="<?php echo $row->name; ?>"><br/>
+            <input type="text" name="category" placeholder="Enter category" value="<?php echo $row->category; ?>"><br>
+            <textarea name="description"><?php echo $row->description; ?></textarea><br>
+            <input type="text" name="quantity" placeholder="Enter quantity" value="<?php echo $row->quantity; ?>" ><br>
+            <input type="text" name="status" placeholder="Enter status" value="<?php echo $row->status; ?>" ><br>
             <input type="submit" name="submit" value="UPDATE">
         </form>
         <br>

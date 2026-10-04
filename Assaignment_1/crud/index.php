@@ -37,7 +37,7 @@
                 <td><?php echo  $row['price'] ?></td>
                 <td><?php echo  $row['status'] ?></td>
                 <td class="action">
-                    <a href="#">Edit</a> |
+                    <a href="product_edit.php">Edit</a> |
                     <a onclick="return confirm('Are you sure to delete')" class="danger" href="product_delete.php?id=<?php echo  $row['id'] ?>" >Delete</a>
                 </td>
               </tr>

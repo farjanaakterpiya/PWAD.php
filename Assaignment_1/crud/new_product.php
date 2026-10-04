@@ -19,8 +19,8 @@
                 include_once("dbconfig.php"); 
 
                $conn->query("INSERT INTO product_list
-                (id, name, description, quantity) VALUES 
-                (NULL, '$name', '$description', '$quantity')");
+                (id, name, category, description, quantity, status) VALUES 
+                (NULL, '$name', '$category', '$description', '$quantity', '$status')");
 
                  if($conn->affected_rows){
                     echo "<div class='message'>Success</div>";
