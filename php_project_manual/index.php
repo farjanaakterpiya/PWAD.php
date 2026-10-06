@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Roksyn - Bootstrap 5 Admin Template</title>
 
-    <?php include 'partial/home _styles.php';?>
+    <?php include 'partials/home_styles.php';?>
+     
   </head>
   <body>
-    
 
     <!--start header-->
-  
-     <?php include 'partial/home_styles.php';?>
+     <?php include 'partials/header.php';?>
      <!--end header-->
 
 
      <!--start sidebar-->
-      <?php include 'partial/leftbar.php';?>
+      <?php include 'partials/sidebar.php';?>
      <!--end sidebar-->
 
 
@@ -732,50 +731,11 @@
 
 
     <!--start theme customization-->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="ThemeCustomizer" aria-labelledby="ThemeCustomizerLable">
-      <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title" id="ThemeCustomizerLable">Theme Customizer</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <h6 class="mb-0">Theme Variation</h6>
-        <hr>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="LightTheme" value="option1">
-          <label class="form-check-label" for="LightTheme">Light</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="DarkTheme" value="option2" checked="">
-          <label class="form-check-label" for="DarkTheme">Dark</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="SemiDarkTheme" value="option3">
-          <label class="form-check-label" for="SemiDarkTheme">Semi Dark</label>
-        </div>
-        <hr>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="MinimalTheme" value="option3">
-          <label class="form-check-label" for="MinimalTheme">Minimal Theme</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ShadowTheme" value="option4">
-          <label class="form-check-label" for="ShadowTheme">Shadow Theme</label>
-        </div>
-       
-      </div>
-    </div>
+    <?php include 'partials/rightbar.php'?>
     <!--end theme customization-->
 
 
    <!--plugins-->
-   <script src="assets/js/jquery.min.js"></script>
-   <script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-   <script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
-   <script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
-   <script src="assets/plugins/apex/apexcharts.min.js"></script>
-   <script src="assets/js/index.js"></script>
-    <!--BS Scripts-->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
+   <?php include 'partials/home_scripts.php';?>
   </body>
 </html>
