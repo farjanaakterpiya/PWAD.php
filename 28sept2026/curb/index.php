@@ -119,7 +119,7 @@
             </div>
 
             <?php
-            $rawData = $conn->query("SELECT * FROM students");
+            $rawData = $conn->query("SELECT * FROM student");
             ?>
             <table class="student-table">
                 <tr>

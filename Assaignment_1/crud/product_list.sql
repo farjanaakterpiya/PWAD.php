@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2026 at 06:10 PM
+-- Generation Time: Oct 04, 2026 at 03:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,17 +31,20 @@ CREATE TABLE `product_list` (
   `id` int(20) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(200) NOT NULL,
-  `quantity` int(20) NOT NULL
+  `quantity` int(20) NOT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `price` decimal(10,4) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product_list`
 --
 
-INSERT INTO `product_list` (`id`, `name`, `description`, `quantity`) VALUES
-(1, 'Pen', 'Blue ball pen', 10),
-(2, 'Notebook', 'Written notebook', 20),
-(3, 'Bag', 'School bag', 5);
+INSERT INTO `product_list` (`id`, `name`, `description`, `quantity`, `category`, `price`, `status`) VALUES
+(1, 'Pen', 'Blue ball pen', 10, 'Stationery', 20.0000, 'Available'),
+(2, 'Notebook', 'Written notebook', 20, 'Stationery', 80.0000, 'Available'),
+(3, 'Bag', 'School bag', 5, 'Accessories', 1250.0000, 'Available');
 
 --
 -- Indexes for dumped tables
@@ -61,7 +64,7 @@ ALTER TABLE `product_list`
 -- AUTO_INCREMENT for table `product_list`
 --
 ALTER TABLE `product_list`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
