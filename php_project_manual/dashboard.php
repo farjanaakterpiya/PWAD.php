@@ -1,3 +1,9 @@
+<?php 
+session_start();
+if($_SESSION['email']!=true){
+  header("location:index.php");
+}
+?>
 <?php include 'dbconfig.php';?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
