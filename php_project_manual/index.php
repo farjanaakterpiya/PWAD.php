@@ -2,20 +2,35 @@
 session_start();
 if(isset($_POST['login_button'])){
     extract($_POST);
-    $password = md5($password);
+    $password = sha1($password);
+    //$password = sha1($password,PASSWOR);
     include_once 'dbconfig.php';
+    echo "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
     $result = $conn->query("SELECT * FROM `users` WHERE email = '$email' AND password = '$password'");
 
 
-    // $row = $result->fetch_assoc();
+    $row = $result->fetch_assoc();
 
 
     if($result->num_rows > 0){
-      session_start();
+      //session_start();
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $result->fetch_assoc()['name'];
-        header("Location: dashboard.php");
+        //$_SESSION['role'] = $role;
+        if($row['role']=='admin'){
+          $_SESSION['url']='dasboard_admin.php';
+          header("Location:dashboard_admin.php");
+        }
+        else if ($row['role']=='customer'){
+           $_SESSION['url']='dasboard_customer.php';
+          header("Location:dashboard_customer.php");
+        }
+        else if($row['role']=='staff'){
+           $_SESSION['url']='dasboard_staff.php';
+          header("Location:dashboard_staff.php");
+        }
+        header("Location: dashboard_admin.php");
         exit;
     } else {
         $login_error = "Login Failed";

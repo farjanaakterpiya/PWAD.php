@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db = "pwad731";
+$db = "cleaning_service";
 
 $conn = new mysqli($host, $user, $pass, $db);
 if (!$conn) {
