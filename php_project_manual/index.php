@@ -16,10 +16,12 @@ if(isset($_POST['login_button'])){
     if($result->num_rows > 0){
       //session_start();
         $_SESSION['email'] = $email;
-        $_SESSION['name'] = $result->fetch_assoc()['name'];
-        //$_SESSION['role'] = $role;
+        $_SESSION['name'] = $row['name'];
+        $_SESSION['role'] = $row['role'];
+  
         if($row['role']=='admin'){
-          $_SESSION['url']='dasboard_admin.php';
+          $_SESSION['url']='dashboard_admin.php';
+          //echo ("today you are exam");
           header("Location:dashboard_admin.php");
         }
         else if ($row['role']=='customer'){
@@ -30,8 +32,7 @@ if(isset($_POST['login_button'])){
            $_SESSION['url']='dasboard_staff.php';
           header("Location:dashboard_staff.php");
         }
-        header("Location: dashboard_admin.php");
-        exit;
+       
     } else {
         $login_error = "Login Failed";
     }

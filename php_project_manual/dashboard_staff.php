@@ -1,7 +1,7 @@
 <?php 
 session_start();
 //if($_SESSION['email']!=true){
-if(!isset($_SESSION['email']) || $_SESSION['role']!=='admin'){
+if(!isset($_SESSION['email'])){
   header("location:index.php");
 }
 if($_SESSION['role']!='staff'){

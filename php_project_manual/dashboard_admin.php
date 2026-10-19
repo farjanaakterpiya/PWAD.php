@@ -1,8 +1,8 @@
 <?php 
 session_start();
 //if($_SESSION['email']!=true){
-if(!isset($_SESSION['email']) || $_SESSION['role']!=='admin'){
-  header("location:index.php");
+if(!isset($_SESSION['email'])){
+  header("Location:index.php");
 }
 if($_SESSION['role']!='admin'){
   header("Location:unauthorize.php");
@@ -10,6 +10,7 @@ if($_SESSION['role']!='admin'){
 ?>
 <?php include 'dbconfig.php';?>
 <!doctype html>
+
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="utf-8">
