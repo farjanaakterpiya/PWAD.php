@@ -1,4 +1,12 @@
-<?php include 'dbconfig.php';?>
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+  header('Location: index.php');
+  exit;
+}
+
+include 'dbconfig.php';
+?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
   <head>

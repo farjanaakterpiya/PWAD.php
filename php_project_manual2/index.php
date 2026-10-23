@@ -1,4 +1,43 @@
-<?php include 'dbconfig.php';?>
+
+
+<?php
+session_start();
+if (isset($_POST['login_button'])) {
+  $email = isset($_POST['email']) && is_string($_POST['email'])
+    ? trim($_POST['email'])
+    : '';
+  $password = isset($_POST['password']) && is_string($_POST['password'])
+    ? $_POST['password']
+    : '';
+
+  if ($email === '' || $password === '') {
+    $login_error = 'Please enter your email and password.';
+  } else {
+    include_once 'dbconfig.php';
+
+    $stmt = $conn->prepare('SELECT password FROM student WHERE email = ? LIMIT 1');
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $stmt->bind_result($stored_password);
+
+    $authenticated = $stmt->fetch()
+      && (hash_equals($stored_password, $password)
+        || hash_equals($stored_password, md5($password)));
+    $stmt->close();
+
+    if ($authenticated) {
+      session_regenerate_id(true);
+      $_SESSION['email'] = $email;
+      header('Location: dashboard.php');
+      exit;
+    }
+
+    $login_error = 'Login failed. Please check your email and password.';
+  }
+}
+?>
+
+
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 
@@ -65,15 +104,22 @@
               </div>
 
               <div class="form-body mt-4">
-                <form class="row g-3">
+                <form class="row g-3" method="post">
+                  <?php if (isset($login_error)): ?>
+                    <div class="col-12">
+                      <div class="alert alert-danger" role="alert">
+                        <?= htmlspecialchars($login_error, ENT_QUOTES, 'UTF-8') ?>
+                      </div>
+                    </div>
+                  <?php endif; ?>
                   <div class="col-12">
                     <label for="inputEmailAddress" class="form-label">Email</label>
-                    <input type="email" class="form-control  border-3" id="inputEmailAddress" placeholder="jhon@example.com">
+                    <input type="email" class="form-control border-3" id="inputEmailAddress" name="email" placeholder="jhon@example.com" required>
                   </div>
                   <div class="col-12">
                     <label for="inputChoosePassword" class="form-label">Password</label>
                     <div class="input-group" id="show_hide_password">
-                      <input type="password" class="form-control border-end-0  border-3" id="inputChoosePassword" value="12345678" placeholder="Enter Password"> 
+                      <input type="password" class="form-control border-end-0 border-3" id="inputChoosePassword" name="password" placeholder="Enter Password" required>
                       <a href="javascript:;" class="input-group-text bg-transparent  border-3"><i class="bi bi-eye-slash-fill"></i></a>
                     </div>
                   </div>
@@ -87,7 +133,7 @@
                   </div>
                   <div class="col-12">
                     <div class="d-grid">
-                      <button type="submit" class="btn  border-3 btn-primary">Login</button>
+                      <button type="submit" name="login_button" value="1" class="btn border-3 btn-primary">Login</button>
                     </div>
                   </div>
                   <div class="col-12">
