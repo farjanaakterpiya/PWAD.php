@@ -1,40 +1,60 @@
-<?php 
-session_start();
-if(isset($_POST['login_button'])){
-    extract($_POST);
-    $password = sha1($password);
-    //$password = sha1($password,PASSWOR);
-    include_once 'dbconfig.php';
-    echo "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+<?php
+require_once 'auth.php';
 
-    $result = $conn->query("SELECT * FROM `users` WHERE email = '$email' AND password = '$password'");
+if (isset($_SESSION['email'], $_SESSION['role'])) {
+    redirect_to_role_dashboard();
+}
 
+$loginError = '';
 
-    $row = $result->fetch_assoc();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once 'dbconfig.php';
 
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if($result->num_rows > 0){
-      //session_start();
-        $_SESSION['email'] = $email;
-        $_SESSION['name'] = $row['name'];
-        $_SESSION['role'] = $row['role'];
-  
-        if($row['role']=='admin'){
-          $_SESSION['url']='dashboard_admin.php';
-          //echo ("today you are exam");
-          header("Location:dashboard_admin.php");
-        }
-        else if ($row['role']=='customer'){
-           $_SESSION['url']='dasboard_customer.php';
-          header("Location:dashboard_customer.php");
-        }
-        else if($row['role']=='staff'){
-           $_SESSION['url']='dasboard_staff.php';
-          header("Location:dashboard_staff.php");
-        }
-       
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        $loginError = 'Your session expired. Please try again.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
+        $loginError = 'Enter a valid email address and password.';
     } else {
-        $login_error = "Login Failed";
+        try {
+            $statement = $conn->prepare('SELECT name, password, role, is_active FROM users WHERE email = ? LIMIT 1');
+            $statement->bind_param('s', $email);
+            $statement->execute();
+            $statement->bind_result($name, $storedPassword, $role, $isActive);
+            $userFound = $statement->fetch();
+            $statement->close();
+
+            $allowedRoles = ['admin', 'customer', 'staff'];
+            $passwordIsValid = false;
+            if ($userFound && (int) $isActive === 1 && is_string($storedPassword) && in_array($role, $allowedRoles, true)) {
+                $passwordIsValid = password_verify($password, $storedPassword);
+                $legacyPassword = sha1($password);
+
+                if (!$passwordIsValid && hash_equals($storedPassword, $legacyPassword)) {
+                    $passwordIsValid = true;
+                    $newPasswordHash = password_hash($password, PASSWORD_DEFAULT);
+                    $update = $conn->prepare('UPDATE users SET password = ? WHERE email = ?');
+                    $update->bind_param('ss', $newPasswordHash, $email);
+                    $update->execute();
+                    $update->close();
+                }
+            }
+
+            if ($passwordIsValid) {
+                session_regenerate_id(true);
+                $_SESSION['email'] = $email;
+                $_SESSION['name'] = $name;
+                $_SESSION['role'] = $role;
+                redirect_to_role_dashboard();
+            }
+
+            $loginError = 'The email or password is incorrect.';
+        } catch (mysqli_sql_exception $exception) {
+            error_log('Login database error: ' . $exception->getMessage());
+            $loginError = 'Unable to sign in right now. Please try again later.';
+        }
     }
 }
 ?>
@@ -43,133 +63,41 @@ if(isset($_POST['login_button'])){
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Roksyn - Bootstrap 5 Admin Template</title>
-
-  <!--plugins-->
-  <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
-  <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet">
-  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet">
-  <!--Styles-->
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/css/icons.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link href="assets/css/main.css" rel="stylesheet">
-  <link href="assets/css/dark-theme.css" rel="stylesheet">
-
+  <title>Sign in | Cleaning Service</title>
+  <?php include 'partials/home_styles.php'; ?>
 </head>
-
 <body>
-   <?php if(isset($login_error)) { echo "<div class='alert alert-danger text-center'>$login_error</div>"; } ?>
-  <!--authentication-->
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-5">
+        <div class="card border-0 shadow">
+          <div class="card-body p-4 p-md-5">
+            <h1 class="h3 mb-2">Welcome back</h1>
+            <p class="text-body-secondary mb-4">Sign in to your cleaning service account.</p>
 
-  <div class="section-authentication-cover">
-    <div class="">
-      <div class="row g-0">
+            <?php if ($loginError !== ''): ?>
+              <div class="alert alert-danger" role="alert"><?php echo e($loginError); ?></div>
+            <?php endif; ?>
 
-        <div class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex bg-primary">
-
-          <div class="card rounded-0 mb-0 border-0 bg-transparent">
-            <div class="card-body">
-              <img src="assets/images/boxed-login.png" class="img-fluid auth-img-cover-login" width="650"
-                alt="">
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
-          <div class="card rounded-0 m-3 mb-0 border-0">
-            <div class="card-body p-sm-5">
-              <img src="assets/images/logo-icon.png" class="mb-4" width="45" alt="">
-              <h4 class="fw-bold">Get Started Now</h4>
-              <p class="mb-0">Enter your credentials to login your account</p>
-
-              <div class="row g-3 my-4">
-                <div class="col-12 col-lg-6" >
-                  <button class="btn btn-light py-2 border-3 font-text1 fw-bold d-flex align-items-center justify-content-center w-100"><img src="assets/images/icons/google-2.png" width="18" class="me-2" alt="">Log In with Google</button>
-                </div>
-                <div class="col col-lg-6">
-                  <button class="btn btn-light py-2 border-3 font-text1 fw-bold d-flex align-items-center justify-content-center w-100"><img src="assets/images/icons/apple-logo.png" width="18" class="me-2" alt="">Log In with Apple</button>
-                </div>
+            <form method="post" action="index.php">
+              <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required autocomplete="email"
+                       value="<?php echo e($_POST['email'] ?? ''); ?>">
               </div>
-
-              <div class="separator section-padding">
-                <div class="line"></div>
-                <p class="mb-0 fw-bold">OR</p>
-                <div class="line"></div>
+              <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
               </div>
+              <button type="submit" class="btn btn-primary w-100">Sign in</button>
+            </form>
 
-              <div class="form-body mt-4">
-                <form class="row g-3" method="POST" class="login-form">
-                  <div class="col-12">
-                    <label for="inputEmailAddress" class="form-label">Email</label>
-                    <input type="email" class="form-control  border-3" id="inputEmailAddress" placeholder="Enter Email Address" name="email" value="<?php if(isset($_POST['email'])) echo $_POST['email']; ?>">
-                  </div>
-                  <div class="col-12">
-                    <label for="inputChoosePassword" class="form-label">Password</label>
-                    <div class="input-group" id="show_hide_password">
-                      <input type="password" class="form-control border-end-0  border-3" id="inputChoosePassword" name="password" value="<?php if(isset($_POST['password'])) echo $_POST['password']; ?>"  placeholder="Enter Password"> 
-                      <a href="javascript:;" class="input-group-text bg-transparent  border-3"><i class="bi bi-eye-slash-fill"></i></a>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-check form-switch  border-3">
-                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-                      <label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
-                    </div>
-                  </div>
-                  <div class="col-md-6 text-end">	<a href="auth-cover-forgot-password.html">Forgot Password ?</a>
-                  </div>
-                  <div class="col-12">
-                    <div class="d-grid">
-                      
-                      <button type="submit" name="login_button" class="btn  border-3 btn-primary">Login</button>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="text-start">
-                      <p class="mb-0">Don't have an account yet? <a href="auth-cover-register.html">Sign up here</a>
-                      </p>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-          </div>
+            <p class="mb-0 mt-4 text-center">New customer? <a href="register.php">Create an account</a></p>
           </div>
         </div>
-
       </div>
-      <!--end row-->
     </div>
-  </div>
-
-  <!--authentication-->
-
-
-
-
-  <!--plugins-->
-  <script src="assets/js/jquery.min.js"></script>
-
-  <script>
-    $(document).ready(function () {
-      $("#show_hide_password a").on('click', function (event) {
-        event.preventDefault();
-        if ($('#show_hide_password input').attr("type") == "text") {
-          $('#show_hide_password input').attr('type', 'password');
-          $('#show_hide_password i').addClass("bi-eye-slash-fill");
-          $('#show_hide_password i').removeClass("bi-eye-fill");
-        } else if ($('#show_hide_password input').attr("type") == "password") {
-          $('#show_hide_password input').attr('type', 'text');
-          $('#show_hide_password i').removeClass("bi-eye-slash-fill");
-          $('#show_hide_password i').addClass("bi-eye-fill");
-        }
-      });
-    });
-  </script>
-
+  </main>
 </body>
 </html>

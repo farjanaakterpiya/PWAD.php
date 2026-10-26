@@ -3,9 +3,11 @@ $(function() {
 	"use strict";
 
 
-// app dropdown
-new PerfectScrollbar(".app-container")
-new PerfectScrollbar(".header-notifications-list")
+var appContainer = document.querySelector(".app-container")
+if (appContainer) new PerfectScrollbar(appContainer)
+
+var notificationList = document.querySelector(".header-notifications-list")
+if (notificationList) new PerfectScrollbar(notificationList)
 
 
 $(".sidebar-close").on("click", function() {
