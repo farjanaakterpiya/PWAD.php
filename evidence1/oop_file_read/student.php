@@ -17,7 +17,7 @@ class student {
     foreach($this->data as $line){
         list ($stid, $name, $batch, $result) = explode ("," ,$line);
         if($stid == $id){
-            echo "ID $stid Name: $name Batch:$batch Rsult:$result";
+            echo "ID $stid Name: $name Batch:$batch Result:$result";
         }
     }
    }
