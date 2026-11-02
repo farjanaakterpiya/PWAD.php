@@ -3,34 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP Login Registration Validation</title>
+    <title>Document</title>
 </head>
 <body>
-
-    <h2>Login Registration Form</h2>
-    <form method="POST" action="">
-        <label>Username:</label>
-        <input type="text" name="username" >
-        <br><br>
-        
-        <input type="submit" name="submit" value=" Login">
+    <form action="" method="post">
+        <input type="text" name="user_email"><br>
+        <input type="submit" name="submit" value="submit">
     </form>
 
     <?php
-    if (isset($_POST['submit'])) {
-        $username = $_POST['username'];
-        $length = strlen($username);
-        if($username.$length>=4 && $length<=8 && strpos($username,"@")){
-            echo "username is correct.";
+    if(isset($_POST['user_email']) && !empty($_POST['user_email'])){
+        $email =$_POST['user_email'];
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)==true){
+            each "Valid email address";
         }else{
-            echo "username is failed";
+            echo "Invalid email address";
         }
-
-        
     }
     ?>
-
 </body>
 </html>
 
+<?php
+        if(isset($_POST['submit'])){
+            $pass = $_POST['password'];
+            $email = $_POST['email'];
+
+            if(strlen($pass) < 8){
+                echo "Password must be 8 chacter";
+                return;
+            }
+            else{
+                if((filter_var($email, FILTER_VALIDATE_EMAIL))){
+                    echo "Email Validated";
+                    return;
+                }
+            }
+            echo "Email are not validated";
+        }
+    ?>
 
