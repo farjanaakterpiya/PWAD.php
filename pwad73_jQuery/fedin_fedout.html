@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <button class="btn1">fadeIn</button>
+    <button class="btn2">fadeOut</button>
+    <button class="btn3">fadIn/fadeOut</button>
+    <div class="box1" style="width:150px; height: 150px; background-color:aqua; display: none;"></div>
+    <script>
+        jQuery(function(){
+            $(".btn1").click(function(){
+                 $(".box1").fadeIn();
+            });
+            $(".btn2").click(function(){
+                $(".box1").fadeOut();
+            });
+            $(".btn3").click(function(){
+                $(".box1").fadeToggle();
+            });
+            
+        });
+    </script>
+</body>
+</html>

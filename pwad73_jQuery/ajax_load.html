@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab placeat explicabo sit aspernatur impedit, culpa, fugit aliquam quo architecto, dolor adipisci facilis quaerat dolorem eum consectetur. Eaque dolorum totam consequatur?</p>
+    <div id="box">
+        <h1>Content wil load here</h1>
+    </div>
+    <button id="btn1">Load file</button>
+    <script>
+        $(document).ready(function(){
+            $("#btn1").click(function(){
+                $("#box").load("mytextfile.txt");
+            })
+        })
+    </script>
+</body>
+</html>
