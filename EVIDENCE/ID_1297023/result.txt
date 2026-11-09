@@ -1,6 +1,0 @@
-Id,     name,       batch,  result,
-101,    Safia,      pwad73,   pass,
-102,    Sumaia,     pwad73,   pass,
-103,    Sara,       pwad73,   pass,
-104,    Sufia,      pwad73,   pass,
-

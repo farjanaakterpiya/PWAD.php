@@ -1,5 +1,0 @@
-id,   name,     batch,     data,
-101,    safia,  pwad73,     pass,
-102,    sufia,  pwad73,     pass,
-103,    saima,  pwad73,     pass,
-104,    sara,  pwad73,      fail,
