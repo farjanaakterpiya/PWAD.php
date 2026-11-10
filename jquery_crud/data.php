@@ -1,7 +1,8 @@
 <?php 
-if($_GET['name']=="Sumaia"){
-    echo "Sumaia is here ";
+if($_GET['name'] == "farzana"){
+    echo "Hello Farzana";
+    
 }else{
-    echo "Sumaia";
+    echo "Hello Guest";
 }
-?>
+;?>
