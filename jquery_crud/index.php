@@ -25,6 +25,13 @@
              function getstudents(){
                  $.get("students.php",function(data,status){
                     $("#container").html(data)
+                    $(".btnDel").click(function(){
+                        let sid = this.id;
+                        //alert(sid);
+                        $.get("delete.php", {id:sid}, function(data){
+                            alert(data);
+                        })
+                    })
                 })
                }
                  getstudents ();
@@ -44,6 +51,10 @@
                   $("#address").val();
                   getstudents();
               });
+            });
+            $(" .btnDel").click(function(){
+               let sid =  $(".btnDel").arr('id');
+               alert("sid");
             });
         });
     </script>
